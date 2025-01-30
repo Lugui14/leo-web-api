@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 
-export class Entity<Props> {
+export abstract class Entity<Props> {
     protected readonly _id: string;
     protected props: Props;
 

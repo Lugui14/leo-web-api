@@ -1,8 +1,7 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 import { ConfigModule } from "@nestjs/config";
 import { validateEnv } from "./infrastructure/config/env.validation";
+import { ServerModule } from "./infrastructure/server/server.module";
 
 @Module({
     imports: [
@@ -11,8 +10,7 @@ import { validateEnv } from "./infrastructure/config/env.validation";
             envFilePath: ".env",
             validate: validateEnv,
         }),
+        ServerModule,
     ],
-    controllers: [AppController],
-    providers: [AppService],
 })
 export class AppModule {}
