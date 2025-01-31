@@ -33,6 +33,7 @@ export class Club extends AggregateRoot<ClubProps> {
             throw new PersonAlreadyInClubError();
         }
 
+        person.clubId = this.id;
         this.props.persons.push(person);
     }
 

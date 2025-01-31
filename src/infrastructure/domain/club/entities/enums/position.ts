@@ -1,5 +1,5 @@
 export enum Position {
-    Associated = "ASSOCIATED",
-    Manager = "MANAGER",
-    Volunteer = "VOLUNTEER",
+    ASSOCIATED = "ASSOCIATED",
+    PRELEO = "PRELEO",
+    TECHNICAL = "TECHNICAL",
 }

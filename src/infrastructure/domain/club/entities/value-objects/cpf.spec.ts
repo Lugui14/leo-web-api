@@ -3,8 +3,8 @@ import { CPF } from "./cpf";
 
 describe("CPF value object test", () => {
     it("should create a valid CPF", () => {
-        const cpf = new CPF("123.456.789-09");
-        expect(cpf.value).toBe("123.456.789-09");
+        const cpf = new CPF("303.124.220-32");
+        expect(cpf.value).toBe("303.124.220-32");
     });
 
     it("should throw an error for an invalid CPF", () => {

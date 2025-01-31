@@ -2,7 +2,7 @@ import { Entity } from "@/core/entity";
 import { Email } from "./value-objects/email";
 import { Position } from "./enums/position";
 import { MonthlyFee } from "./monthly-fee";
-import { MonthlyFeeAlreadyExists } from "./errors/monthly-fee-already-exists";
+import { MonthlyFeeAlreadyExistsError } from "./errors/monthly-fee-already-exists";
 import { CPF } from "./value-objects/cpf";
 
 interface PersonProps {
@@ -63,7 +63,7 @@ export class Person extends Entity<PersonProps> {
         );
 
         if (existingFee) {
-            throw new MonthlyFeeAlreadyExists();
+            throw new MonthlyFeeAlreadyExistsError();
         }
 
         this.props.monthlyFees.push(monthlyFee);

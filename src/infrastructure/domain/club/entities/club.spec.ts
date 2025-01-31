@@ -21,9 +21,9 @@ describe("Club entity test", () => {
         name: "Alice",
         email: new Email("alice@example.com"),
         birthdate: new Date("1990-01-01"),
-        cpf: new CPF("000.000.000-00"),
+        cpf: new CPF("388.645.490-80"),
         password: "securepassword",
-        position: Position.Associated,
+        position: Position.ASSOCIATED,
         monthlyFees: [monthlyFee1],
     });
 
@@ -31,9 +31,9 @@ describe("Club entity test", () => {
         name: "Bob",
         email: new Email("bob@example.com"),
         birthdate: new Date("1995-05-05"),
-        cpf: new CPF("111.111.111-11"),
+        cpf: new CPF("559.555.900-48"),
         password: "securepassword",
-        position: Position.Manager,
+        position: Position.PRELEO,
         monthlyFees: [monthlyFee2],
     });
 
