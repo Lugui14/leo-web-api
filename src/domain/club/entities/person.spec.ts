@@ -1,4 +1,4 @@
-import { Position } from "./enums/position";
+import { Role } from "./enums/role";
 import { MonthlyFeeAlreadyExistsError } from "./errors/monthly-fee-already-exists";
 import { MonthlyFee } from "./monthly-fee";
 import { Person } from "./person";
@@ -21,8 +21,8 @@ describe("Person entity test", () => {
             email,
             cpf,
             birthdate,
-            password: "securepassword",
-            position: Position.ASSOCIATED,
+            password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
+            roles: [Role.ASSOCIATED],
             monthlyFees: [monthlyFee1],
         });
 
@@ -31,7 +31,7 @@ describe("Person entity test", () => {
         expect(person.cpf.value).toBe("696.061.050-83");
         expect(person.birthdate).toEqual(birthdate);
         expect(person.password).toBe("securepassword");
-        expect(person.position).toBe(Position.ASSOCIATED);
+        expect(person.roles).toContain(Role.ASSOCIATED);
         expect(person.monthlyFees).toContain(monthlyFee1);
     });
 
@@ -46,8 +46,8 @@ describe("Person entity test", () => {
             email,
             cpf,
             birthdate,
-            password: "securepassword",
-            position: Position.ASSOCIATED,
+            password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
+            roles: [Role.ASSOCIATED],
             monthlyFees: [monthlyFee1],
         });
 
