@@ -1,5 +1,5 @@
 import { Club } from "./club";
-import { Position } from "./enums/position";
+import { Role } from "./enums/role";
 import { PersonAlreadyInClubError } from "./errors/person-already-in-club-error";
 import { MonthlyFee } from "./monthly-fee";
 import { Person } from "./person";
@@ -22,8 +22,8 @@ describe("Club entity test", () => {
         email: new Email("alice@example.com"),
         birthdate: new Date("1990-01-01"),
         cpf: new CPF("388.645.490-80"),
-        password: "securepassword",
-        position: Position.ASSOCIATED,
+        password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
+        roles: [Role.ASSOCIATED],
         monthlyFees: [monthlyFee1],
     });
 
@@ -32,8 +32,8 @@ describe("Club entity test", () => {
         email: new Email("bob@example.com"),
         birthdate: new Date("1995-05-05"),
         cpf: new CPF("559.555.900-48"),
-        password: "securepassword",
-        position: Position.PRELEO,
+        password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
+        roles: [Role.PRELEO],
         monthlyFees: [monthlyFee2],
     });
 

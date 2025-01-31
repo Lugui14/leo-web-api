@@ -1,6 +1,6 @@
 import { Entity } from "@/core/entity";
 import { Email } from "./value-objects/email";
-import { Position } from "./enums/position";
+import { Role } from "./enums/role";
 import { MonthlyFee } from "./monthly-fee";
 import { MonthlyFeeAlreadyExistsError } from "./errors/monthly-fee-already-exists";
 import { CPF } from "./value-objects/cpf";
@@ -11,7 +11,8 @@ interface PersonProps {
     cpf: CPF;
     birthdate: Date;
     password: string;
-    position: Position;
+    refreshToken?: string;
+    roles: Role[];
     monthlyFees: MonthlyFee[];
     clubId?: string;
 }
@@ -41,8 +42,24 @@ export class Person extends Entity<PersonProps> {
         return this.props.password;
     }
 
-    get position(): Position {
-        return this.props.position;
+    set password(password: string) {
+        this.props.password = password;
+    }
+
+    get refreshToken(): string | undefined {
+        return this.props.refreshToken;
+    }
+
+    set refreshToken(refreshToken: string | undefined) {
+        this.props.refreshToken = refreshToken;
+    }
+
+    get roles(): Role[] {
+        return this.props.roles;
+    }
+
+    set roles(roles: Role[]) {
+        this.props.roles = roles;
     }
 
     get monthlyFees(): MonthlyFee[] {
