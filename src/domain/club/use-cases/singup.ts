@@ -14,7 +14,7 @@ export class SignUpUseCase {
         cpf: string,
         birthdate: Date,
         password: string,
-        role: Role,
+        roles: Role[],
     ): Promise<Person> {
         const salt = genSaltSync(12);
         const hashedPassword = hashSync(password, salt);
@@ -25,8 +25,7 @@ export class SignUpUseCase {
             cpf: new CPF(cpf),
             birthdate,
             password: hashedPassword,
-            salt,
-            role,
+            roles,
             monthlyFees: [],
         });
 

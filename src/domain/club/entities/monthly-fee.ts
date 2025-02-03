@@ -3,7 +3,7 @@ import { Entity } from "@/core/entity";
 interface MonthlyFeeProps {
     value: number;
     dueDate: Date;
-    status: "Paid" | "Pending";
+    status: "PAID" | "PENDING";
 }
 
 export class MonthlyFee extends Entity<MonthlyFeeProps> {
@@ -19,15 +19,15 @@ export class MonthlyFee extends Entity<MonthlyFeeProps> {
         return this.props.dueDate;
     }
 
-    get status(): "Paid" | "Pending" {
+    get status(): "PAID" | "PENDING" {
         return this.props.status;
     }
 
     markAsPaid(): void {
-        this.props.status = "Paid";
+        this.props.status = "PAID";
     }
 
     static create(props: Omit<MonthlyFeeProps, "status">, id?: string): MonthlyFee {
-        return new MonthlyFee({ ...props, status: "Pending" }, id);
+        return new MonthlyFee({ ...props, status: "PENDING" }, id);
     }
 }

@@ -11,7 +11,7 @@ services:
         ports:
             - "5432:5432"
         volumes:
-            - pgdata2:/var/lib/postgresql/data
+            - ~/pgdata:/var/lib/postgresql/data
 
     api:
         build:
@@ -28,8 +28,8 @@ services:
             DATABASE_USER: ${POSTGRES_USER}
             DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
             DATABASE_NAME: ${POSTGRES_DB}
-#        depends_on:
-#            - postgres
+        depends_on:
+            - postgres
 
 volumes:
-    pgdata2:
+    pgdata:
