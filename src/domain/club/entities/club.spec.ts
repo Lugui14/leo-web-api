@@ -1,12 +1,16 @@
 import { Club } from "./club";
-import { Role } from "./enums/role";
+import { RoleEnum } from "./enums/role";
 import { PersonAlreadyInClubError } from "./errors/person-already-in-club-error";
 import { MonthlyFee } from "./monthly-fee";
 import { Person } from "./person";
+import { Role } from "./role";
 import { CPF } from "./value-objects/cpf";
 import { Email } from "./value-objects/email";
 
 describe("Club entity test", () => {
+    const associatedRole = Role.create({ name: RoleEnum.ASSOCIATED });
+    const preleoRole = Role.create({ name: RoleEnum.PRE_LEO });
+
     const monthlyFee1 = MonthlyFee.create({
         value: 50,
         dueDate: new Date("2023-10-01"),
@@ -23,7 +27,7 @@ describe("Club entity test", () => {
         birthdate: new Date("1990-01-01"),
         cpf: new CPF("388.645.490-80"),
         password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
-        roles: [Role.ASSOCIATED],
+        roles: [associatedRole],
         monthlyFees: [monthlyFee1],
     });
 
@@ -33,7 +37,7 @@ describe("Club entity test", () => {
         birthdate: new Date("1995-05-05"),
         cpf: new CPF("559.555.900-48"),
         password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
-        roles: [Role.PRELEO],
+        roles: [preleoRole],
         monthlyFees: [monthlyFee2],
     });
 

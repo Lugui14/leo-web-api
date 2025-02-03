@@ -1,9 +1,11 @@
 import { Entity } from "@/core/entity";
 import { Email } from "./value-objects/email";
-import { Role } from "./enums/role";
+import { Role } from "./role";
 import { MonthlyFee } from "./monthly-fee";
 import { MonthlyFeeAlreadyExistsError } from "./errors/monthly-fee-already-exists";
 import { CPF } from "./value-objects/cpf";
+
+export type PersonPropsDto = Omit<Person, "password" & "refreshToken">;
 
 interface PersonProps {
     name: string;

@@ -1,6 +1,8 @@
-export class InvalidPasswordError extends Error {
+import { ForbiddenException } from "@nestjs/common";
+
+export class InvalidPasswordError extends ForbiddenException {
     constructor() {
-        super("Invalid password");
+        super("Invalid credentials");
         this.name = "InvalidPassword";
     }
 }

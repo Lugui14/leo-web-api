@@ -12,12 +12,10 @@ export class PrismaClubMapper {
         );
     }
 
-    static toPersistence(club: Club): Prisma.ClubUncheckedCreateInput {
+    static toPersistence(club: Club): Prisma.ClubCreateInput {
         return {
             id: club.id,
             name: club.name,
-            createdAt: new Date(),
-            updatedAt: new Date(),
         };
     }
 }

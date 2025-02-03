@@ -5,7 +5,9 @@ import { ConfigService } from "@nestjs/config";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, {
+        logger: ["error", "warn", "log"],
+    });
 
     const swaggerConfig = new DocumentBuilder()
         .setTitle("Cats example")

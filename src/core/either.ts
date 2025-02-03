@@ -12,6 +12,11 @@ export class Left<L> {
     isRight(): this is Right<never> {
         return false;
     }
+
+    // eslint-disable-next-line
+    fold<T>(onLeft: (left: L) => T, onRight: (right: never) => T): T {
+        return onLeft(this.value);
+    }
 }
 
 export class Right<R> {
@@ -27,6 +32,10 @@ export class Right<R> {
 
     isRight(): this is Right<R> {
         return true;
+    }
+
+    fold<T>(onLeft: (left: never) => T, onRight: (right: R) => T): T {
+        return onRight(this.value);
     }
 }
 
