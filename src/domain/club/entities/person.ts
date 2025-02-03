@@ -88,7 +88,7 @@ export class Person extends Entity<PersonProps> {
 
     getTotalFeesPaid(): number {
         return this.props.monthlyFees
-            .filter((fee) => fee.status === "Paid")
+            .filter((fee) => fee.status === "PAID")
             .reduce((total, fee) => total + fee.value, 0);
     }
 

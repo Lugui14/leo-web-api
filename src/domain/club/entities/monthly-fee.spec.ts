@@ -9,7 +9,7 @@ describe("MonthlyFee entity test", () => {
 
         expect(monthlyFee.value).toBe(50);
         expect(monthlyFee.dueDate).toEqual(new Date("2023-10-01"));
-        expect(monthlyFee.status).toBe("Pending");
+        expect(monthlyFee.status).toBe("PENDING");
     });
 
     it("should mark a monthly fee as paid", () => {
@@ -20,6 +20,6 @@ describe("MonthlyFee entity test", () => {
 
         monthlyFee.markAsPaid();
 
-        expect(monthlyFee.status).toBe("Paid");
+        expect(monthlyFee.status).toBe("PAID");
     });
 });

@@ -18,12 +18,11 @@ export class ChangePasswordUseCase {
         }
 
         // Hash the new password
-        const salt = bcrypt.genSaltSync(10);
+        const salt = bcrypt.genSaltSync(12);
         const hashedPassword = bcrypt.hashSync(newPassword, salt);
 
         // Update the person's password and salt
         person.password = hashedPassword;
-        person.salt = salt;
 
         // Save the updated person
         await this.personRepository.save(person);
