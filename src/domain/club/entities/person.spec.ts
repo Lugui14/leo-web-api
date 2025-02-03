@@ -1,14 +1,16 @@
-import { Role } from "./enums/role";
+import { Role } from "./role";
 import { MonthlyFeeAlreadyExistsError } from "./errors/monthly-fee-already-exists";
 import { MonthlyFee } from "./monthly-fee";
 import { Person } from "./person";
 import { CPF } from "./value-objects/cpf";
 import { Email } from "./value-objects/email";
+import { RoleEnum } from "./enums/role";
 
 describe("Person entity test", () => {
     const birthdate = new Date("1990-01-01");
     const email = new Email("alice@example.com");
     const cpf = new CPF("696.061.050-83");
+    const associatedRole = Role.create({ name: RoleEnum.ASSOCIATED });
 
     const monthlyFee1 = MonthlyFee.create({
         value: 50,
@@ -22,7 +24,7 @@ describe("Person entity test", () => {
             cpf,
             birthdate,
             password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
-            roles: [Role.ASSOCIATED],
+            roles: [associatedRole],
             monthlyFees: [monthlyFee1],
         });
 
@@ -31,7 +33,7 @@ describe("Person entity test", () => {
         expect(person.cpf.value).toBe("696.061.050-83");
         expect(person.birthdate).toEqual(birthdate);
         expect(person.password).toBe("securepassword");
-        expect(person.roles).toContain(Role.ASSOCIATED);
+        expect(person.roles).toContain(associatedRole);
         expect(person.monthlyFees).toContain(monthlyFee1);
     });
 
@@ -47,7 +49,7 @@ describe("Person entity test", () => {
             cpf,
             birthdate,
             password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
-            roles: [Role.ASSOCIATED],
+            roles: [associatedRole],
             monthlyFees: [monthlyFee1],
         });
 

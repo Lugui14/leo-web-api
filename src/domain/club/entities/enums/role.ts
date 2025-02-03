@@ -1,5 +1,5 @@
-export enum Role {
+export enum RoleEnum {
     ASSOCIATED = "ASSOCIATED",
-    PRELEO = "PRELEO",
+    PRE_LEO = "PRE_LEO",
     TECHNICAL = "TECHNICAL",
 }

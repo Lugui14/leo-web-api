@@ -1,5 +1,7 @@
-export abstract class Encrypter {
-    abstract encrypt(value: object): string;
+import { JWTPayloadProps } from "@/infrastructure/auth/current-user.dto";
 
-    abstract decrypt(value: string): object;
+export abstract class Encrypter {
+    abstract encrypt(value: object, expiresIn: string): string;
+
+    abstract decrypt(value: string): JWTPayloadProps;
 }

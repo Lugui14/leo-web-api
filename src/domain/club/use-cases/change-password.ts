@@ -1,6 +1,8 @@
 import * as bcrypt from "bcrypt";
 import { PersonRepository } from "../repositories/person-repository";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class ChangePasswordUseCase {
     constructor(private personRepository: PersonRepository) {}
 

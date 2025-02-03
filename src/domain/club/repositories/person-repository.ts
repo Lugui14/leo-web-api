@@ -1,7 +1,7 @@
 import { Person } from "../entities/person";
 
-export interface PersonRepository {
-    save(person: Person): Promise<void>;
-    findByEmail(email: string): Promise<Person | null>;
-    findById(id: string): Promise<Person | null>;
+export abstract class PersonRepository {
+    abstract save(person: Person): Promise<Person>;
+    abstract findByEmail(email: string): Promise<Person | null>;
+    abstract findById(id: string): Promise<Person | null>;
 }

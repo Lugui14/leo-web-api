@@ -1,6 +1,8 @@
-export class PersonNotFoundError extends Error {
+import { ForbiddenException } from "@nestjs/common";
+
+export class PersonNotFoundError extends ForbiddenException {
     constructor() {
-        super("Person not found");
+        super("Invalid credentials");
         this.name = "PersonNotFound";
     }
 }

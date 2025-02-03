@@ -31,7 +31,7 @@ export class PrismaPersonMapper {
             password: person.password,
             refreshToken: person.refreshToken || null,
             roles: {
-                connect: person.roles.map((role) => ({ id: role.id })),
+                connect: person.roles.map((role) => ({ name: role.name })),
             },
             monthlyFees: {
                 create: person.monthlyFees.map((fee) => ({

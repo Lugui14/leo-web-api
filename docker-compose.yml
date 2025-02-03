@@ -2,8 +2,8 @@ version: "3.8"
 
 services:
     postgres:
-        image: postgres:16
-        container_name: postgres
+        image: postgres:16-alpine
+        container_name: leo-web-postgres
         environment:
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -11,7 +11,7 @@ services:
         ports:
             - "5432:5432"
         volumes:
-            - ~/pgdata:/var/lib/postgresql/data
+            - ~/pgdata2:/var/lib/postgresql/data
 
     api:
         build:
@@ -32,4 +32,4 @@ services:
             - postgres
 
 volumes:
-    pgdata:
+    pgdata2:
