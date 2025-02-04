@@ -4,7 +4,7 @@ import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { AuthGuard } from "@nestjs/passport";
 import { ROLES_KEY } from "./roles.decorator";
-import { JWTTokenProps, RequestProps } from "./current-user.dto";
+import { JWTPayloadProps, RequestProps } from "./current-user.dto";
 import { IS_PUBLIC_KEY } from "./public";
 
 @Injectable()
@@ -37,7 +37,7 @@ export class JwtAuthGuard extends AuthGuard(`jwt`) {
         const token = request.headers.authorization.split(" ")[1];
         if (!token) throw new UnauthorizedException("No token provided");
 
-        const payload: JWTTokenProps = this.jwtService.verify(token);
+        const payload: JWTPayloadProps = this.jwtService.verify(token);
         const userRoles = payload.roles || [];
         const hasRole = () => userRoles.some((role) => requiredRoles.includes(role));
 

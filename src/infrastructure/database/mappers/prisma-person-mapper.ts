@@ -1,10 +1,18 @@
+import { RoleEnum } from "@/domain/club/entities/enums/role";
 import { Person } from "@/domain/club/entities/person";
+import { Role } from "@/domain/club/entities/role";
 import { CPF } from "@/domain/club/entities/value-objects/cpf";
 import { Email } from "@/domain/club/entities/value-objects/email";
-import { Prisma, Person as PrismaPerson } from "@prisma/client";
+import { Prisma, Person as PrismaPerson, Role as PrismaRole } from "@prisma/client";
+
+type PrismaRoles = {
+    roles?: PrismaRole[];
+};
+
+type PrismaPersonWithRoles = PrismaPerson & PrismaRoles;
 
 export class PrismaPersonMapper {
-    static toEntity = (person: PrismaPerson): Person => {
+    static toEntity = (person: PrismaPersonWithRoles): Person => {
         return Person.create(
             {
                 name: person.name,
@@ -13,7 +21,7 @@ export class PrismaPersonMapper {
                 birthdate: person.birthdate,
                 password: person.password,
                 refreshToken: person.refreshToken || undefined,
-                roles: [],
+                roles: person.roles ? person.roles.map((role) => Role.create({ name: role.name as RoleEnum })) : [],
                 monthlyFees: [],
                 clubId: person.clubId || undefined,
             },

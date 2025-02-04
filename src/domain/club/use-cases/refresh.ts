@@ -36,8 +36,11 @@ export class RefreshUseCase {
             roles: payload.roles,
         };
 
-        const newAccessToken = this.jwtEncrypter.encrypt({ ...newPayload, type: "access_token" }, "60s");
-        const newRefreshToken = this.jwtEncrypter.encrypt({ ...newPayload, type: "refresh_token" }, "1h");
+        const newAccessToken = this.jwtEncrypter.encrypt({ ...newPayload, type: "access_token" }, "1h");
+        const newRefreshToken = this.jwtEncrypter.encrypt({ ...newPayload, type: "refresh_token" }, "1d");
+
+        person.refreshToken = newRefreshToken;
+        await this.personRepository.update(person);
 
         return right({
             accessToken: newAccessToken,

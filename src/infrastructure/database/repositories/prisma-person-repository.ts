@@ -19,6 +19,7 @@ export class PrismaPersonRepository implements PersonRepository {
     async findByEmail(email: string): Promise<Person | null> {
         const prismaPerson = await this.prisma.person.findUnique({
             where: { email },
+            include: { roles: true },
         });
 
         return prismaPerson ? PrismaPersonMapper.toEntity(prismaPerson) : null;
@@ -27,8 +28,18 @@ export class PrismaPersonRepository implements PersonRepository {
     async findById(id: string): Promise<Person | null> {
         const prismaPerson = await this.prisma.person.findUnique({
             where: { id },
+            include: { roles: true },
         });
 
         return prismaPerson ? PrismaPersonMapper.toEntity(prismaPerson) : null;
+    }
+
+    async update(person: Person): Promise<Person> {
+        const prismaPerson = await this.prisma.person.update({
+            where: { id: person.id },
+            data: PrismaPersonMapper.toPersistence(person),
+        });
+
+        return PrismaPersonMapper.toEntity(prismaPerson);
     }
 }

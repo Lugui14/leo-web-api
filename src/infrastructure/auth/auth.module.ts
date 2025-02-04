@@ -17,7 +17,7 @@ import { JwtAuthGuard } from "./jwt-auth.guard";
             global: true,
             useFactory: (envService: EnvService) => ({
                 secret: envService.get("JWT_SECRET"),
-                signOptions: { expiresIn: "60s" },
+                signOptions: { expiresIn: "1h" },
             }),
         }),
     ],
