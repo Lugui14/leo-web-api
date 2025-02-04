@@ -1,9 +1,11 @@
 import { SignUpUseCase } from "@/domain/club/use-cases/signup";
-import { Body, Controller, HttpCode, Post, UsePipes } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpException, HttpStatus, Post, UsePipes } from "@nestjs/common";
 import { z } from "zod";
 import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
 import { Person } from "@/domain/club/entities/person";
 import { Public } from "@/infrastructure/auth/public";
+import { PersonAlreadyExists } from "@/domain/club/use-cases/errors/person-already-exists";
+import { PersonPresenter } from "../presenter/person-presenter";
 
 const signUpBodySchema = z.object({
     name: z.string().min(1),
@@ -27,18 +29,10 @@ export class SignupController {
         const result = await this.signUpUseCase.execute(body);
 
         return result.fold(
-            (error) => {
-                throw error;
+            (error: PersonAlreadyExists) => {
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
             },
-            (person: Person) => {
-                return {
-                    id: person.id,
-                    name: person.name,
-                    email: person.email.value,
-                    cpf: person.cpf.value,
-                    birthdate: person.birthdate,
-                };
-            },
+            (person: Person) => PersonPresenter.toHttp(person),
         );
     }
 }
