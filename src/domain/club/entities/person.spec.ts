@@ -32,7 +32,7 @@ describe("Person entity test", () => {
         expect(person.email.value).toBe("alice@example.com");
         expect(person.cpf.value).toBe("696.061.050-83");
         expect(person.birthdate).toEqual(birthdate);
-        expect(person.password).toBe("securepassword");
+        expect(person.password).toBe("$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y");
         expect(person.roles).toContain(associatedRole);
         expect(person.monthlyFees).toContain(monthlyFee1);
     });

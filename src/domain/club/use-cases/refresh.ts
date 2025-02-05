@@ -21,7 +21,7 @@ export class RefreshUseCase {
     async execute(
         refreshToken: string,
     ): Promise<Either<InvalidTokenError | PersonNotFoundError, RefreshUseCasePropsResponse>> {
-        const payload: JWTPayloadProps = this.jwtEncrypter.decrypt(refreshToken);
+        const payload = this.jwtEncrypter.decrypt(refreshToken) as JWTPayloadProps;
 
         if (payload.type !== "refresh_token") return left(new InvalidTokenError("Invalid token type"));
 

@@ -20,7 +20,7 @@
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "test:e2e": "jest --config ./test/jest-e2e.json"
+        "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
         "@nestjs/common": "^11.0.1",
@@ -32,6 +32,7 @@
         "@nestjs/swagger": "^11.0.3",
         "@prisma/client": "^6.3.0",
         "bcrypt": "^5.1.1",
+        "dotenv": "^16.4.7",
         "module-alias": "^2.2.3",
         "passport": "^0.7.0",
         "passport-jwt": "^4.0.1",
@@ -56,6 +57,7 @@
         "@types/passport-jwt": "^4.0.1",
         "@types/passport-local": "^1.0.38",
         "@types/supertest": "^6.0.2",
+        "cross-env": "^7.0.3",
         "eslint": "^9.18.0",
         "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-prettier": "^5.2.2",

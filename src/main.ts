@@ -21,7 +21,7 @@ async function bootstrap() {
 
     const configService = app.get(ConfigService);
     const PORT: number = configService.get("API_PORT") ?? 3000;
-    await app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+    await app.listen(PORT, () => console.log(`server running on port ${PORT}, ${process.env.NODE_ENV}`));
 }
 
 bootstrap();
