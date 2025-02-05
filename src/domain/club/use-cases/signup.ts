@@ -1,8 +1,8 @@
+import { HashGenerator } from "@/domain/club/cryptography/hash-generator";
 import { PersonRepository } from "../repositories/person-repository";
 import { Person } from "../entities/person";
 import { Email } from "../entities/value-objects/email";
 import { CPF } from "../entities/value-objects/cpf";
-import { genSaltSync, hashSync } from "bcrypt";
 import { Role } from "../entities/role";
 import { RoleEnum } from "../entities/enums/role";
 import { Injectable } from "@nestjs/common";
@@ -19,7 +19,10 @@ interface SignUpUseCaseProps {
 
 @Injectable()
 export class SignUpUseCase {
-    constructor(private personRepository: PersonRepository) {}
+    constructor(
+        private personRepository: PersonRepository,
+        private hashGenerator: HashGenerator,
+    ) {}
 
     async execute({
         name,
@@ -28,8 +31,7 @@ export class SignUpUseCase {
         birthdate,
         password,
     }: SignUpUseCaseProps): Promise<Either<PersonAlreadyExists, Person>> {
-        const salt = genSaltSync(12);
-        const hashedPassword = hashSync(password, salt);
+        const hashedPassword = await this.hashGenerator.generateHash(password);
 
         const personAlreadyExists = await this.personRepository.findByEmail(email);
         if (personAlreadyExists) return left(new PersonAlreadyExists());
