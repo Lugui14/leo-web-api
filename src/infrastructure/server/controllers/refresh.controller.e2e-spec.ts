@@ -4,8 +4,9 @@ import { PrismaModule } from "@/infrastructure/database/prisma.module";
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { hash } from "bcrypt";
-import request from "supertest";
 import { PersonFactory } from "@/../test/factories/make-person";
+import { CPF } from "@/domain/club/entities/value-objects/cpf";
+import * as request from "supertest";
 
 interface AuthenticateResponse {
     accessToken: string;
@@ -28,11 +29,14 @@ describe("Refresh e2e", () => {
     });
 
     test("POST in /refresh (should return access and refresh token)", async () => {
-        await personFactory.makePrismaPerson({ password: await hash("123456", 12) });
+        const savedPerson = await personFactory.makePrismaPerson({
+            password: await hash("123456", 12),
+            cpf: new CPF("620.741.640-68"),
+        });
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const authResponse = await request(app.getHttpServer()).post("/authenticate").send({
-            email: "test@test.com",
+            email: savedPerson.email.value,
             password: "123456",
         });
 
@@ -52,26 +56,29 @@ describe("Refresh e2e", () => {
     });
 
     test("POST in /refresh (should not reuse refresh token)", async () => {
-        await personFactory.makePrismaPerson({ password: await hash("123456", 12) });
+        const savedPerson = await personFactory.makePrismaPerson({
+            password: await hash("123456", 12),
+            cpf: new CPF("604.916.380-43"),
+        });
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const authResponse = await request(app.getHttpServer()).post("/authenticate").send({
-            email: "test@test.com",
+            email: savedPerson.email.value,
             password: "123456",
         });
 
         const authBody = authResponse.body as AuthenticateResponse;
         const refreshToken = authBody.refreshToken;
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        await request(app.getHttpServer()).post("/refresh").send({
+        const refreshTokenRequest = {
             refresh_token: refreshToken,
-        });
+        };
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        const invalidAuthResponse = await request(app.getHttpServer()).post("/refresh").send({
-            refresh_token: refreshToken,
-        });
+        await request(app.getHttpServer()).post("/refresh").send(refreshTokenRequest);
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const invalidAuthResponse = await request(app.getHttpServer()).post("/refresh").send(refreshTokenRequest);
 
         const invalidAuthBody = invalidAuthResponse.body as InvalidTokenError;
 

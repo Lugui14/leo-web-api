@@ -1,10 +1,12 @@
-import { RefreshUseCase } from "@/domain/club/use-cases/refresh";
-import { Body, Controller, Get, HttpCode, Post, UsePipes } from "@nestjs/common";
+import { RefreshUseCase, RefreshUseCasePropsResponse } from "@/domain/club/use-cases/refresh";
+import { Body, Controller, Get, HttpCode, HttpException, Post, UsePipes } from "@nestjs/common";
 import { z } from "zod";
 import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
 import { Roles } from "@/infrastructure/auth/roles.decorator";
 import { RoleEnum } from "@/domain/club/entities/enums/role";
 import { Public } from "@/infrastructure/auth/public";
+import { PersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
+import { InvalidTokenError } from "@/domain/club/use-cases/errors/invalid-token";
 
 const refreshBodySchema = z.object({
     refresh_token: z.string().min(1),
@@ -21,7 +23,14 @@ export class RefreshController {
     @Public()
     @UsePipes(new ZodValidationPipe(refreshBodySchema))
     async handle(@Body() body: RefreshBody) {
-        return await this.refreshUseCase.execute(body.refresh_token);
+        const result = await this.refreshUseCase.execute(body.refresh_token);
+
+        return result.fold(
+            (error: InvalidTokenError | PersonNotFoundError) => {
+                throw new HttpException(error.message, error.getStatus());
+            },
+            (response: RefreshUseCasePropsResponse) => response,
+        );
     }
 
     @Get("/test")

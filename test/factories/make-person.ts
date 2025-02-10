@@ -4,14 +4,15 @@ import { Email } from "@/domain/club/entities/value-objects/email";
 import { PrismaPersonMapper } from "@/infrastructure/database/mappers/prisma-person-mapper";
 import { PrismaService } from "@/infrastructure/database/prisma.service";
 import { Injectable } from "@nestjs/common";
+import { faker } from "@faker-js/faker";
 
 export function makePerson(overrides: Partial<Person> = {}): Person {
     return Person.create({
-        name: "Test",
-        email: new Email("test@test.com"),
+        name: faker.person.fullName(),
+        email: new Email(faker.internet.email()),
         password: "123456",
         birthdate: new Date("1999-01-01"),
-        cpf: new CPF("03.124.220-32"),
+        cpf: new CPF("335.038.740-38"),
         roles: [],
         monthlyFees: [],
         ...overrides,
