@@ -3,10 +3,11 @@ import { PrismaModule } from "@/infrastructure/database/prisma.module";
 import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { PersonFactory } from "@/../test/factories/make-person";
-import request from "supertest";
+import * as request from "supertest";
 import { Person } from "@/domain/club/entities/person";
 import { hash } from "bcrypt";
 import { PersonAlreadyExists } from "@/domain/club/use-cases/errors/person-already-exists";
+import { CPF } from "@/domain/club/entities/value-objects/cpf";
 
 describe("SignUp e2e", () => {
     let app: INestApplication;
@@ -28,7 +29,7 @@ describe("SignUp e2e", () => {
         const response = await request(app.getHttpServer()).post("/signup").send({
             name: "test",
             email: "test@test.com",
-            cpf: "303.124.220-32",
+            cpf: "158.492.310-56",
             birthdate: "1999-01-01",
             password: "123456",
         });
@@ -38,17 +39,20 @@ describe("SignUp e2e", () => {
         expect(response.status).toBe(201);
         expect(body.name).toBe("test");
         expect(body.email).toBe("test@test.com");
-        expect(body.cpf).toBe("303.124.220-32");
-        expect(body.birthdate).toBe("1999-01-01");
+        expect(body.cpf).toBe("158.492.310-56");
+        expect(body.birthdate).toBe(new Date("1999-01-01").toISOString());
     });
 
     test("POST in /signup (should return 400 email already in use)", async () => {
-        await personFactory.makePrismaPerson({ password: await hash("123456", 12) });
+        const savedPerson = await personFactory.makePrismaPerson({
+            password: await hash("123456", 12),
+            cpf: new CPF("577.614.210-56"),
+        });
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const response = await request(app.getHttpServer()).post("/signup").send({
             name: "test",
-            email: "test@test.com",
+            email: savedPerson.email.value,
             cpf: "303.124.220-32",
             birthdate: "1999-01-01",
             password: "123456",
