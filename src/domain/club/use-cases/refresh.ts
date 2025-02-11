@@ -21,7 +21,7 @@ export class RefreshUseCase {
     async execute(
         refreshToken: string,
     ): Promise<Either<InvalidTokenError | PersonNotFoundError, RefreshUseCasePropsResponse>> {
-        const payload = this.jwtEncrypter.decrypt(refreshToken) as JWTPayloadProps;
+        const payload = (await this.jwtEncrypter.decrypt(refreshToken)) as JWTPayloadProps;
 
         if (payload.type !== "refresh_token") return left(new InvalidTokenError("Invalid token type"));
 
@@ -36,8 +36,8 @@ export class RefreshUseCase {
             roles: payload.roles,
         };
 
-        const newAccessToken = this.jwtEncrypter.encrypt({ ...newPayload, type: "access_token" }, "1h");
-        const newRefreshToken = this.jwtEncrypter.encrypt({ ...newPayload, type: "refresh_token" }, "1d");
+        const newAccessToken = await this.jwtEncrypter.encrypt({ ...newPayload, type: "access_token" }, "1h");
+        const newRefreshToken = await this.jwtEncrypter.encrypt({ ...newPayload, type: "refresh_token" }, "1d");
 
         person.refreshToken = newRefreshToken;
         await this.personRepository.update(person);

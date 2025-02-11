@@ -48,8 +48,8 @@ export class AuthenticateUseCase {
             roles: person.roles.map((role) => role.name),
         };
 
-        const accessToken = this.jwtEncrypter.encrypt({ ...payload, type: "access_token" }, "1h");
-        const refreshToken = this.jwtEncrypter.encrypt({ ...payload, type: "refresh_token" }, "1d");
+        const accessToken = await this.jwtEncrypter.encrypt({ ...payload, type: "access_token" }, "1h");
+        const refreshToken = await this.jwtEncrypter.encrypt({ ...payload, type: "refresh_token" }, "1d");
 
         person.refreshToken = refreshToken;
         await this.personRepository.update(person);

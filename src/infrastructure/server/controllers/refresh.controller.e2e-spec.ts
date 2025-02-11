@@ -74,15 +74,25 @@ describe("Refresh e2e", () => {
             refresh_token: refreshToken,
         };
 
+        // time to jwt generate a different refresh token
+        await new Promise((resolve) => {
+            setTimeout(resolve, 1000);
+        });
+
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         await request(app.getHttpServer()).post("/refresh").send(refreshTokenRequest);
+
+        // time to jwt generate a different refresh token
+        await new Promise((resolve) => {
+            setTimeout(resolve, 1000);
+        });
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const invalidAuthResponse = await request(app.getHttpServer()).post("/refresh").send(refreshTokenRequest);
 
         const invalidAuthBody = invalidAuthResponse.body as InvalidTokenError;
 
-        expect(invalidAuthResponse.status).toBe(HttpStatus.FORBIDDEN);
+        expect(invalidAuthResponse.status).toBe(HttpStatus.UNAUTHORIZED);
         expect(invalidAuthBody.message).toBe("Invalid token");
     });
 

@@ -53,7 +53,7 @@ describe("Authenticate e2e", () => {
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const response = await request(app.getHttpServer()).post("/authenticate").send({
-            email: "t@t",
+            email: "t@t.com",
             password: "123456",
         });
 

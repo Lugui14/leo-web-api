@@ -6,6 +6,8 @@ import { CPF } from "../entities/value-objects/cpf";
 import { Person } from "../entities/person";
 import { Email } from "../entities/value-objects/email";
 import { FakeHashGenerator } from "@/../test/cryptography/fake-hash-generator";
+import { PersonNotFoundError } from "./errors/person-not-found";
+import { InvalidPasswordError } from "./errors/invalid-password";
 
 describe("Authentication use case tests", () => {
     const mockPersonRepository = new InMemoryPersonRepository();
@@ -50,7 +52,23 @@ describe("Authentication use case tests", () => {
         expect(refreshToken).toBeDefined();
     });
 
-    it("should return person not found error", async () => {});
+    it("should return person not found error", async () => {
+        const response = await useCase.execute({
+            email: "t@t.com",
+            password: "123456",
+        });
 
-    it("should return invalid password error", async () => {});
+        expect(response.isLeft()).toBeTruthy();
+        expect(response.value).toBeInstanceOf(PersonNotFoundError);
+    });
+
+    it("should return invalid password error", async () => {
+        const response = await useCase.execute({
+            email: "test@test.com",
+            password: "123457",
+        });
+
+        expect(response.isLeft()).toBeTruthy();
+        expect(response.value).toBeInstanceOf(InvalidPasswordError);
+    });
 });
