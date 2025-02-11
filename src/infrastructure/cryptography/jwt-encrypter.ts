@@ -7,11 +7,11 @@ import { JWTPayloadProps } from "../auth/current-user.dto";
 export class JwtEncrypter implements Encrypter {
     constructor(private jwtService: JwtService) {}
 
-    encrypt(value: object, expiresIn?: string): string {
-        return this.jwtService.sign(value, { expiresIn });
+    async encrypt(value: object, expiresIn?: string): Promise<string> {
+        return await this.jwtService.signAsync(value, { expiresIn });
     }
 
-    decrypt(value: string): JWTPayloadProps {
-        return this.jwtService.verify(value);
+    async decrypt(value: string): Promise<JWTPayloadProps> {
+        return this.jwtService.verifyAsync(value);
     }
 }

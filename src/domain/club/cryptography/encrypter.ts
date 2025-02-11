@@ -1,5 +1,5 @@
 export abstract class Encrypter {
-    abstract encrypt(value: object, expiresIn: string): string;
+    abstract encrypt(value: object, expiresIn: string): Promise<string>;
 
-    abstract decrypt(value: string): object;
+    abstract decrypt(value: string): Promise<object>;
 }

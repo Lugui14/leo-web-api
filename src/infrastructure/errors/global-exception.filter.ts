@@ -1,34 +1,29 @@
-import {
-    ExceptionFilter,
-    Catch,
-    ArgumentsHost,
-    UnauthorizedException,
-    ForbiddenException,
-    HttpStatus,
-} from "@nestjs/common";
+import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus, HttpException } from "@nestjs/common";
 import { Response } from "express";
 
-@Catch(Error, UnauthorizedException, ForbiddenException)
+@Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
-    catch(exception: ForbiddenException | UnauthorizedException | Error, host: ArgumentsHost) {
+    catch(exception: unknown, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
 
-        if (exception instanceof UnauthorizedException) {
-            return response.status(HttpStatus.UNAUTHORIZED).json({
-                statusCode: HttpStatus.UNAUTHORIZED,
-                message: exception.message,
-            });
-        } else if (exception instanceof ForbiddenException) {
-            return response.status(HttpStatus.FORBIDDEN).json({
-                statusCode: HttpStatus.FORBIDDEN,
-                message: exception.message,
-            });
+        let statusCode: number;
+        let message: string;
+
+        if (exception instanceof HttpException) {
+            statusCode = exception.getStatus();
+            message = exception.message;
+        } else if (exception instanceof Error) {
+            statusCode = HttpStatus.BAD_REQUEST;
+            message = exception.message;
+        } else {
+            statusCode = HttpStatus.BAD_REQUEST;
+            message = "An unexpected error occurred";
         }
 
-        response.status(HttpStatus.BAD_REQUEST).json({
-            statusCode: HttpStatus.BAD_REQUEST,
-            message: exception.message,
+        response.status(statusCode).json({
+            statusCode,
+            message,
         });
     }
 }
