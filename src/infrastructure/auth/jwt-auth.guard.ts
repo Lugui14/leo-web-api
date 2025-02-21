@@ -30,7 +30,6 @@ export class JwtAuthGuard extends AuthGuard(`jwt`) {
             context.getHandler(),
             context.getClass(),
         ]);
-        if (!requiredRoles) return true;
 
         const request: RequestProps = context.switchToHttp().getRequest();
 
@@ -39,7 +38,8 @@ export class JwtAuthGuard extends AuthGuard(`jwt`) {
 
         const payload: JWTPayloadProps = this.jwtService.verify(token);
         const userRoles = payload.roles || [];
-        const hasRole = () => userRoles.some((role) => requiredRoles.includes(role));
+        const hasRole = () =>
+            requiredRoles?.length > 0 ? userRoles.some((role) => requiredRoles.includes(role)) : true;
 
         if (!hasRole()) throw new UnauthorizedException("User does not have the required roles");
 

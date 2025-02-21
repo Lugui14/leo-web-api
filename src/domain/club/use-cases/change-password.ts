@@ -1,32 +1,49 @@
-import * as bcrypt from "bcrypt";
 import { PersonRepository } from "../repositories/person-repository";
 import { Injectable } from "@nestjs/common";
+import { HashGenerator } from "../cryptography/hash-generator";
+import { Either, left, right } from "@/core/either";
+import { Person } from "../entities/person";
+import { PersonNotFoundError } from "./errors/person-not-found";
+import { HashComparer } from "../cryptography/hash-comparer";
+import { InvalidPasswordError } from "./errors/invalid-password";
+
+interface ChangePasswordUseCaseProps {
+    personId: string;
+    oldPassword: string;
+    newPassword: string;
+}
 
 @Injectable()
 export class ChangePasswordUseCase {
-    constructor(private personRepository: PersonRepository) {}
+    constructor(
+        private personRepository: PersonRepository,
+        private hashGenerator: HashGenerator,
+        private hashComparer: HashComparer,
+    ) {}
 
-    async execute(personId: string, oldPassword: string, newPassword: string): Promise<void> {
-        // Find the person by ID
+    async execute({
+        personId,
+        oldPassword,
+        newPassword,
+    }: ChangePasswordUseCaseProps): Promise<Either<PersonNotFoundError, Person>> {
         const person = await this.personRepository.findById(personId);
+
         if (!person) {
-            throw new Error("Person not found");
+            return left(new PersonNotFoundError());
         }
 
-        // Verify the old password
-        const isOldPasswordValid = bcrypt.compareSync(oldPassword, person.password);
+        const isOldPasswordValid = await this.hashComparer.compare(oldPassword, person.password);
+
         if (!isOldPasswordValid) {
-            throw new Error("Invalid old password");
+            return left(new InvalidPasswordError());
         }
 
-        // Hash the new password
-        const salt = bcrypt.genSaltSync(12);
-        const hashedPassword = bcrypt.hashSync(newPassword, salt);
+        const hashedPassword = await this.hashGenerator.generateHash(newPassword);
 
-        // Update the person's password and salt
         person.password = hashedPassword;
 
-        // Save the updated person
-        await this.personRepository.save(person);
+        const savedPerson = await this.personRepository.save(person);
+
+        return right(savedPerson);
     }
 }
