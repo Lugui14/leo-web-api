@@ -42,7 +42,7 @@ export class ChangePasswordUseCase {
 
         person.password = hashedPassword;
 
-        const savedPerson = await this.personRepository.save(person);
+        const savedPerson = await this.personRepository.update(person);
 
         return right(savedPerson);
     }
