@@ -30,4 +30,15 @@ export class PrismaClubRepository implements ClubRepository {
 
         return prismaClubs.map((prismaClub) => PrismaClubMapper.toEntity(prismaClub));
     }
+
+    async update(club: Club): Promise<Club> {
+        const prismaClub = await this.prisma.club.update({
+            where: {
+                id: club.id,
+            },
+            data: PrismaClubMapper.toPersistence(club),
+        });
+
+        return PrismaClubMapper.toEntity(prismaClub);
+    }
 }
