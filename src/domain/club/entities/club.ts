@@ -1,9 +1,11 @@
 import { AggregateRoot } from "@/core/aggregate-root";
 import { Person } from "./person";
 import { PersonAlreadyInClubError } from "./errors/person-already-in-club-error";
+import { CNPJ } from "./value-objects/cnpj";
 
 interface ClubProps {
     name: string;
+    cnpj: CNPJ;
     persons: Person[];
 }
 
@@ -28,6 +30,10 @@ export class Club extends AggregateRoot<ClubProps> {
         return this.props.persons;
     }
 
+    get cnpj(): CNPJ {
+        return this.props.cnpj;
+    }
+
     addPerson(person: Person): void {
         if (person.clubId && person.clubId !== this.id) {
             throw new PersonAlreadyInClubError();
@@ -35,6 +41,10 @@ export class Club extends AggregateRoot<ClubProps> {
 
         person.clubId = this.id;
         this.props.persons.push(person);
+    }
+
+    removePerson(personId: string): void {
+        this.props.persons = this.props.persons.filter((p) => p.id !== personId);
     }
 
     calculateTotalMonthlyRevenue(): number {

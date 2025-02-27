@@ -2,9 +2,9 @@ import { InvalidTokenError } from "./errors/invalid-token";
 import { Either, left, right } from "@/core/either";
 import { JWTPayloadProps } from "@/infrastructure/auth/current-user.dto";
 import { PersonRepository } from "../repositories/person-repository";
-import { PersonNotFoundError } from "./errors/person-not-found";
 import { Injectable } from "@nestjs/common";
 import { Encrypter } from "../cryptography/encrypter";
+import { ForbiddenPersonNotFoundError } from "./errors/person-not-found";
 
 export interface RefreshUseCasePropsResponse {
     accessToken: string;
@@ -20,13 +20,13 @@ export class RefreshUseCase {
 
     async execute(
         refreshToken: string,
-    ): Promise<Either<InvalidTokenError | PersonNotFoundError, RefreshUseCasePropsResponse>> {
+    ): Promise<Either<InvalidTokenError | ForbiddenPersonNotFoundError, RefreshUseCasePropsResponse>> {
         const payload = (await this.jwtEncrypter.decrypt(refreshToken)) as JWTPayloadProps;
 
         if (payload.type !== "refresh_token") return left(new InvalidTokenError("Invalid token type"));
 
         const person = await this.personRepository.findById(payload.sub);
-        if (!person) return left(new PersonNotFoundError());
+        if (!person) return left(new ForbiddenPersonNotFoundError());
 
         if (person.refreshToken !== refreshToken) return left(new InvalidTokenError());
 

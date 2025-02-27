@@ -5,7 +5,7 @@ import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
 import { Roles } from "@/infrastructure/auth/roles.decorator";
 import { Public } from "@/infrastructure/auth/public";
 import { InvalidPasswordError } from "@/domain/club/use-cases/errors/invalid-password";
-import { PersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
+import { ForbiddenPersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
 
 const authenticateBodySchema = z.object({
     email: z.string().email().min(1),
@@ -27,7 +27,7 @@ export class AuthenticateController {
         const result = await this.authenticateUseCase.execute(body);
 
         return result.fold(
-            (error: InvalidPasswordError | PersonNotFoundError) => {
+            (error: InvalidPasswordError | ForbiddenPersonNotFoundError) => {
                 throw new HttpException(error.message, error.getStatus());
             },
             (response: AuthenticateUseCaseResponse) => response,

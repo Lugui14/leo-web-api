@@ -1,7 +1,7 @@
 import { InvalidCPFError } from "../errors/invalid-cpf-error";
 
 export class CPF {
-    value: string;
+    readonly value: string;
 
     constructor(value: string) {
         this.validate(value);

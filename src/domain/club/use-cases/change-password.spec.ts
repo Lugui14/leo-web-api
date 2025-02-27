@@ -5,7 +5,7 @@ import { ChangePasswordUseCase } from "./change-password";
 import { Person } from "../entities/person";
 import { Email } from "../entities/value-objects/email";
 import { CPF } from "../entities/value-objects/cpf";
-import { PersonNotFoundError } from "./errors/person-not-found";
+import { ForbiddenPersonNotFoundError } from "./errors/person-not-found";
 import { InvalidPasswordError } from "./errors/invalid-password";
 
 describe("Change password use case tests", () => {
@@ -50,7 +50,7 @@ describe("Change password use case tests", () => {
         });
 
         expect(response.isLeft()).toBeTruthy();
-        expect(response.value).toBeInstanceOf(PersonNotFoundError);
+        expect(response.value).toBeInstanceOf(ForbiddenPersonNotFoundError);
     });
 
     it("should return invalid password error", async () => {
