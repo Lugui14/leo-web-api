@@ -3,14 +3,11 @@ import { RoleEnum } from "./enums/role";
 import { PersonAlreadyInClubError } from "./errors/person-already-in-club-error";
 import { MonthlyFee } from "./monthly-fee";
 import { Person } from "./person";
-import { Role } from "./role";
+import { CNPJ } from "./value-objects/cnpj";
 import { CPF } from "./value-objects/cpf";
 import { Email } from "./value-objects/email";
 
 describe("Club entity test", () => {
-    const associatedRole = Role.create({ name: RoleEnum.ASSOCIATED });
-    const preleoRole = Role.create({ name: RoleEnum.PRE_LEO });
-
     const monthlyFee1 = MonthlyFee.create({
         value: 50,
         dueDate: new Date("2023-10-01"),
@@ -27,7 +24,7 @@ describe("Club entity test", () => {
         birthdate: new Date("1990-01-01"),
         cpf: new CPF("388.645.490-80"),
         password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
-        roles: [associatedRole],
+        roles: [RoleEnum.ASSOCIATED],
         monthlyFees: [monthlyFee1],
     });
 
@@ -37,7 +34,7 @@ describe("Club entity test", () => {
         birthdate: new Date("1995-05-05"),
         cpf: new CPF("559.555.900-48"),
         password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
-        roles: [preleoRole],
+        roles: [RoleEnum.PRE_LEO],
         monthlyFees: [monthlyFee2],
     });
 
@@ -49,6 +46,7 @@ describe("Club entity test", () => {
     it("should create a club with valid attributes", () => {
         const club = Club.create({
             name: "Example Club",
+            cnpj: new CNPJ("22.686.306/0001-86"),
             persons: [person1, person2],
         });
 
@@ -59,6 +57,7 @@ describe("Club entity test", () => {
     it("should add a person to the club", () => {
         const club = Club.create({
             name: "Example Club",
+            cnpj: new CNPJ("90.538.521/0001-90"),
             persons: [person1],
         });
 
@@ -69,11 +68,13 @@ describe("Club entity test", () => {
     it("should throw error on adding a person that is already in another club", () => {
         const club1 = Club.create({
             name: "Example Club 1",
+            cnpj: new CNPJ("58.947.964/0001-21"),
             persons: [],
         });
 
         const club2 = Club.create({
             name: "Example Club 2",
+            cnpj: new CNPJ("30.041.364/0001-80"),
             persons: [],
         });
 
@@ -87,6 +88,7 @@ describe("Club entity test", () => {
 
         const club = Club.create({
             name: "Example Club",
+            cnpj: new CNPJ("32.479.226/0001-03"),
             persons: [person1, person2],
         });
 

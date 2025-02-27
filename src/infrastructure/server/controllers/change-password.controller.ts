@@ -3,7 +3,7 @@ import { Body, Controller, HttpCode, HttpException, Post, UsePipes } from "@nest
 import { z } from "zod";
 import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
 import { Roles } from "@/infrastructure/auth/roles.decorator";
-import { PersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
+import { ForbiddenPersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
 import { InvalidPasswordError } from "@/domain/club/use-cases/errors/invalid-password";
 import { Person } from "@/domain/club/entities/person";
 import { PersonPresenter } from "../presenter/person-presenter";
@@ -28,7 +28,7 @@ export class ChangePasswordController {
         const result = await this.ChangePasswordUseCase.execute(body);
 
         return result.fold(
-            (error: InvalidPasswordError | PersonNotFoundError) => {
+            (error: InvalidPasswordError | ForbiddenPersonNotFoundError) => {
                 throw new HttpException(error.message, error.getStatus());
             },
             (person: Person) => PersonPresenter.toHttp(person),

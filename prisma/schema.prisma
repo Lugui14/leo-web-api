@@ -16,6 +16,7 @@ datasource db {
 model Club {
   id        String   @id @default(cuid())
   name      String
+  cnpj      String   @unique
   persons   Person[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

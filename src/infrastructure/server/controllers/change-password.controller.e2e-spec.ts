@@ -7,7 +7,7 @@ import * as request from "supertest";
 import { Person } from "@/domain/club/entities/person";
 import { hash } from "bcrypt";
 import { CPF } from "@/domain/club/entities/value-objects/cpf";
-import { PersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
+import { ForbiddenPersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
 import { InvalidPasswordError } from "@/domain/club/use-cases/errors/invalid-password";
 import { JwtService } from "@nestjs/jwt";
 import { RoleEnum } from "@/domain/club/entities/enums/role";
@@ -83,7 +83,7 @@ describe("Change password e2e", () => {
                 newPassword: "1234567",
             });
 
-        const body = response.body as PersonNotFoundError;
+        const body = response.body as ForbiddenPersonNotFoundError;
 
         expect(response.status).toBe(403);
         expect(body.message).toBe("Invalid credentials");

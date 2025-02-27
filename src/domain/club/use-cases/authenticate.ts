@@ -1,6 +1,6 @@
 import { PersonRepository } from "../repositories/person-repository";
 import { InvalidPasswordError } from "./errors/invalid-password";
-import { PersonNotFoundError } from "./errors/person-not-found";
+import { ForbiddenPersonNotFoundError } from "./errors/person-not-found";
 import { Either, left, right } from "@/core/either";
 import { HashComparer } from "../cryptography/hash-comparer";
 import { JWTPayloadProps } from "@/infrastructure/auth/current-user.dto";
@@ -29,11 +29,11 @@ export class AuthenticateUseCase {
         email,
         password,
     }: AuthenticateUseCaseProps): Promise<
-        Either<InvalidPasswordError | PersonNotFoundError, AuthenticateUseCaseResponse>
+        Either<InvalidPasswordError | ForbiddenPersonNotFoundError, AuthenticateUseCaseResponse>
     > {
         const person = await this.personRepository.findByEmail(email);
         if (!person) {
-            return left(new PersonNotFoundError());
+            return left(new ForbiddenPersonNotFoundError());
         }
 
         const isPasswordValid = await this.hashComparer.compare(password, person.password);
@@ -45,7 +45,7 @@ export class AuthenticateUseCase {
         const payload: Omit<JWTPayloadProps, "type"> = {
             sub: person.id,
             email: person.email.value,
-            roles: person.roles.map((role) => role.name),
+            roles: person.roles,
         };
 
         const accessToken = await this.jwtEncrypter.encrypt({ ...payload, type: "access_token" }, "1h");

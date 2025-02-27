@@ -5,7 +5,7 @@ import { ZodValidationPipe } from "../pipes/zod-validation-pipe";
 import { Roles } from "@/infrastructure/auth/roles.decorator";
 import { RoleEnum } from "@/domain/club/entities/enums/role";
 import { Public } from "@/infrastructure/auth/public";
-import { PersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
+import { ForbiddenPersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
 import { InvalidTokenError } from "@/domain/club/use-cases/errors/invalid-token";
 
 const refreshBodySchema = z.object({
@@ -26,7 +26,7 @@ export class RefreshController {
         const result = await this.refreshUseCase.execute(body.refresh_token);
 
         return result.fold(
-            (error: InvalidTokenError | PersonNotFoundError) => {
+            (error: InvalidTokenError | ForbiddenPersonNotFoundError) => {
                 throw new HttpException(error.message, error.getStatus());
             },
             (response: RefreshUseCasePropsResponse) => response,

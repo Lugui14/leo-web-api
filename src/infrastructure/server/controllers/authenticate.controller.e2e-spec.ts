@@ -1,6 +1,6 @@
 import { AppModule } from "@/app.module";
 import { InvalidPasswordError } from "@/domain/club/use-cases/errors/invalid-password";
-import { PersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
+import { ForbiddenPersonNotFoundError } from "@/domain/club/use-cases/errors/person-not-found";
 import { PrismaModule } from "@/infrastructure/database/prisma.module";
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -57,7 +57,7 @@ describe("Authenticate e2e", () => {
             password: "123456",
         });
 
-        const body = response.body as PersonNotFoundError;
+        const body = response.body as ForbiddenPersonNotFoundError;
 
         expect(response.status).toBe(HttpStatus.FORBIDDEN);
         expect(body.message).toBe("Invalid credentials");

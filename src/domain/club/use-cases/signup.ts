@@ -3,7 +3,6 @@ import { PersonRepository } from "../repositories/person-repository";
 import { Person } from "../entities/person";
 import { Email } from "../entities/value-objects/email";
 import { CPF } from "../entities/value-objects/cpf";
-import { Role } from "../entities/role";
 import { RoleEnum } from "../entities/enums/role";
 import { Injectable } from "@nestjs/common";
 import { Either, left, right } from "@/core/either";
@@ -42,7 +41,7 @@ export class SignUpUseCase {
             cpf: new CPF(cpf),
             birthdate: new Date(birthdate),
             password: hashedPassword,
-            roles: [Role.create({ name: RoleEnum.PRE_LEO })],
+            roles: [RoleEnum.PRE_LEO],
             monthlyFees: [],
         });
 

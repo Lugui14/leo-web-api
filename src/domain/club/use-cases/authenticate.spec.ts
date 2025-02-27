@@ -6,7 +6,7 @@ import { CPF } from "../entities/value-objects/cpf";
 import { Person } from "../entities/person";
 import { Email } from "../entities/value-objects/email";
 import { FakeHashGenerator } from "@/../test/cryptography/fake-hash-generator";
-import { PersonNotFoundError } from "./errors/person-not-found";
+import { ForbiddenPersonNotFoundError } from "./errors/person-not-found";
 import { InvalidPasswordError } from "./errors/invalid-password";
 
 describe("Authentication use case tests", () => {
@@ -59,7 +59,7 @@ describe("Authentication use case tests", () => {
         });
 
         expect(response.isLeft()).toBeTruthy();
-        expect(response.value).toBeInstanceOf(PersonNotFoundError);
+        expect(response.value).toBeInstanceOf(ForbiddenPersonNotFoundError);
     });
 
     it("should return invalid password error", async () => {

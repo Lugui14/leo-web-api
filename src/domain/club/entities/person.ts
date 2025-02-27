@@ -1,9 +1,9 @@
 import { Entity } from "@/core/entity";
 import { Email } from "./value-objects/email";
-import { Role } from "./role";
 import { MonthlyFee } from "./monthly-fee";
 import { MonthlyFeeAlreadyExistsError } from "./errors/monthly-fee-already-exists";
 import { CPF } from "./value-objects/cpf";
+import { RoleEnum } from "./enums/role";
 
 export type PersonPropsDto = Omit<Person, "password" & "refreshToken">;
 
@@ -14,7 +14,7 @@ interface PersonProps {
     birthdate: Date;
     password: string;
     refreshToken?: string;
-    roles: Role[];
+    roles: RoleEnum[];
     monthlyFees: MonthlyFee[];
     clubId?: string;
 }
@@ -56,11 +56,11 @@ export class Person extends Entity<PersonProps> {
         this.props.refreshToken = refreshToken;
     }
 
-    get roles(): Role[] {
+    get roles(): RoleEnum[] {
         return this.props.roles;
     }
 
-    set roles(roles: Role[]) {
+    set roles(roles: RoleEnum[]) {
         this.props.roles = roles;
     }
 
@@ -86,6 +86,14 @@ export class Person extends Entity<PersonProps> {
         }
 
         this.props.monthlyFees.push(monthlyFee);
+    }
+
+    payMonthlyFee(date: Date = new Date()): void {
+        const fee = this.props.monthlyFees.find(
+            (fee) => fee.dueDate.getMonth() === date.getMonth() && fee.dueDate.getFullYear() === date.getFullYear(),
+        );
+
+        if (fee) fee.markAsPaid();
     }
 
     getTotalFeesPaid(): number {
