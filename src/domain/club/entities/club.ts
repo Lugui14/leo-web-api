@@ -11,14 +11,6 @@ interface ClubProps {
 
 export class Club extends AggregateRoot<ClubProps> {
     private constructor(props: ClubProps, id?: string) {
-        props.persons.forEach((person) => {
-            if (person.clubId && person.clubId !== id) {
-                throw new PersonAlreadyInClubError();
-            }
-
-            person.clubId = id;
-        });
-
         super(props, id);
     }
 

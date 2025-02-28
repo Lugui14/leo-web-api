@@ -26,4 +26,12 @@ export class InMemoryClubRepository implements ClubRepository {
             return resolve(this.clubs);
         });
     }
+
+    update(club: Club): Promise<Club> {
+        return new Promise((resolve) => {
+            const index = this.clubs.findIndex((c) => c.id === club.id);
+            this.clubs[index] = club;
+            return resolve(club);
+        });
+    }
 }
