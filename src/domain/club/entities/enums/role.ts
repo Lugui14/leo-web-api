@@ -1,4 +1,5 @@
 export enum RoleEnum {
+    PRESIDENT = "PRESIDENT",
     ASSOCIATED = "ASSOCIATED",
     PRE_LEO = "PRE_LEO",
     TECHNICAL = "TECHNICAL",

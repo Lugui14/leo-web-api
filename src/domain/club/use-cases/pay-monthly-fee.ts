@@ -25,7 +25,7 @@ export class PayMonthlyFeeUseCase {
         if (!person) return left(new PersonNotFoundError());
 
         let date = new Date();
-        if (month) date = new Date(date.getFullYear(), month - 1, date.getDate());
+        if (month) date = new Date(date.getFullYear(), month, date.getDate());
 
         person.payMonthlyFee(date);
 
