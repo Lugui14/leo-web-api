@@ -1,4 +1,5 @@
 import { Club } from "@/domain/club/entities/club";
+import { ClubPersonList } from "@/domain/club/entities/club-person-list";
 import { CNPJ } from "@/domain/club/entities/value-objects/cnpj";
 import { Prisma, Club as PrismaClub } from "@prisma/client";
 
@@ -7,8 +8,8 @@ export class PrismaClubMapper {
         return Club.create(
             {
                 name: club.name,
-                cnpj: new CNPJ(club.cnpj as string),
-                persons: [],
+                cnpj: new CNPJ(club.cnpj),
+                persons: new ClubPersonList(),
             },
             club.id,
         );

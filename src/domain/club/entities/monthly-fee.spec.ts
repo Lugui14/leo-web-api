@@ -5,6 +5,7 @@ describe("MonthlyFee entity test", () => {
         const monthlyFee = MonthlyFee.create({
             value: 50,
             dueDate: new Date("2023-10-01"),
+            status: "PENDING",
         });
 
         expect(monthlyFee.value).toBe(50);
@@ -16,6 +17,7 @@ describe("MonthlyFee entity test", () => {
         const monthlyFee = MonthlyFee.create({
             value: 50,
             dueDate: new Date("2023-10-01"),
+            status: "PENDING",
         });
 
         monthlyFee.markAsPaid();

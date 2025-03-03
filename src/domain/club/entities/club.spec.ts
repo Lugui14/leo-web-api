@@ -1,7 +1,9 @@
 import { Club } from "./club";
+import { ClubPersonList } from "./club-person-list";
 import { RoleEnum } from "./enums/role";
 import { PersonAlreadyInClubError } from "./errors/person-already-in-club-error";
 import { MonthlyFee } from "./monthly-fee";
+import { MonthlyFeeList } from "./monthly-fee-list";
 import { Person } from "./person";
 import { CNPJ } from "./value-objects/cnpj";
 import { CPF } from "./value-objects/cpf";
@@ -11,11 +13,13 @@ describe("Club entity test", () => {
     const monthlyFee1 = MonthlyFee.create({
         value: 50,
         dueDate: new Date("2023-10-01"),
+        status: "PENDING",
     });
 
     const monthlyFee2 = MonthlyFee.create({
         value: 50,
         dueDate: new Date("2023-11-01"),
+        status: "PENDING",
     });
 
     const person1 = Person.create({
@@ -25,7 +29,7 @@ describe("Club entity test", () => {
         cpf: new CPF("388.645.490-80"),
         password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
         roles: [RoleEnum.ASSOCIATED],
-        monthlyFees: [monthlyFee1],
+        monthlyFees: new MonthlyFeeList([monthlyFee1]),
     });
 
     const person2 = Person.create({
@@ -35,7 +39,7 @@ describe("Club entity test", () => {
         cpf: new CPF("559.555.900-48"),
         password: "$2a$12$ASRwBStOwCfQnm5/zXNcyu/.qgcDlwAax6PqQlE7Ojh4RY.O/385y",
         roles: [RoleEnum.PRE_LEO],
-        monthlyFees: [monthlyFee2],
+        monthlyFees: new MonthlyFeeList([monthlyFee2]),
     });
 
     beforeEach(() => {
@@ -47,35 +51,35 @@ describe("Club entity test", () => {
         const club = Club.create({
             name: "Example Club",
             cnpj: new CNPJ("22.686.306/0001-86"),
-            persons: [person1, person2],
+            persons: new ClubPersonList([person1, person2]),
         });
 
         expect(club.name).toBe("Example Club");
-        expect(club.persons).toEqual([person1, person2]);
+        expect(club.persons.getItems()).toEqual([person1, person2]);
     });
 
     it("should add a person to the club", () => {
         const club = Club.create({
             name: "Example Club",
             cnpj: new CNPJ("90.538.521/0001-90"),
-            persons: [person1],
+            persons: new ClubPersonList([person1]),
         });
 
         club.addPerson(person2);
-        expect(club.persons).toEqual([person1, person2]);
+        expect(club.persons.getItems()).toEqual([person1, person2]);
     });
 
     it("should throw error on adding a person that is already in another club", () => {
         const club1 = Club.create({
             name: "Example Club 1",
             cnpj: new CNPJ("58.947.964/0001-21"),
-            persons: [],
+            persons: new ClubPersonList(),
         });
 
         const club2 = Club.create({
             name: "Example Club 2",
             cnpj: new CNPJ("30.041.364/0001-80"),
-            persons: [],
+            persons: new ClubPersonList(),
         });
 
         club1.addPerson(person1);
@@ -89,7 +93,7 @@ describe("Club entity test", () => {
         const club = Club.create({
             name: "Example Club",
             cnpj: new CNPJ("32.479.226/0001-03"),
-            persons: [person1, person2],
+            persons: new ClubPersonList([person1, person2]),
         });
 
         expect(club.calculateTotalMonthlyRevenue()).toBe(100);

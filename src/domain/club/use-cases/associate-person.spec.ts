@@ -10,6 +10,8 @@ import { AssociatePersonUseCase } from "./associate-person";
 import { PersonNotFoundError } from "./errors/person-not-found";
 import { RoleEnum } from "../entities/enums/role";
 import { PersonNotInAClubError } from "./errors/person-not-in-a-club";
+import { MonthlyFeeList } from "../entities/monthly-fee-list";
+import { ClubPersonList } from "../entities/club-person-list";
 
 describe("Add person to club use case tests", () => {
     const mockPersonRepository = new InMemoryPersonRepository();
@@ -29,7 +31,7 @@ describe("Add person to club use case tests", () => {
                 birthdate: new Date("1999-01-01"),
                 cpf: new CPF("214.395.310-05"),
                 roles: [RoleEnum.PRE_LEO],
-                monthlyFees: [],
+                monthlyFees: new MonthlyFeeList(),
             }),
         );
 
@@ -37,13 +39,13 @@ describe("Add person to club use case tests", () => {
             Club.create({
                 name: "Test",
                 cnpj: new CNPJ("80.260.887/0001-96"),
-                persons: [],
+                persons: new ClubPersonList(),
             }),
         );
 
         savedClub.addPerson(person);
         await mockClubRepository.update(savedClub);
-        await mockPersonRepository.update(savedClub.persons[0]);
+        await mockPersonRepository.update(savedClub.persons.getItems()[0]);
     });
 
     it("Should associate a person", async () => {
@@ -73,7 +75,7 @@ describe("Add person to club use case tests", () => {
                 birthdate: new Date("1999-01-01"),
                 cpf: new CPF("311.853.540-77"),
                 roles: [RoleEnum.PRE_LEO],
-                monthlyFees: [],
+                monthlyFees: new MonthlyFeeList(),
             }),
         );
 

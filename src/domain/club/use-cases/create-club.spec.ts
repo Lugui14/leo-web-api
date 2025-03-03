@@ -8,6 +8,7 @@ import { CPF } from "../entities/value-objects/cpf";
 import { Club } from "../entities/club";
 import { RoleEnum } from "../entities/enums/role";
 import { PersonNotFoundError } from "./errors/person-not-found";
+import { MonthlyFeeList } from "../entities/monthly-fee-list";
 
 describe("Create club use case tests", () => {
     const mockClubRepository = new InMemoryClubRepository();
@@ -27,7 +28,7 @@ describe("Create club use case tests", () => {
                 birthdate: new Date("1999-01-01"),
                 cpf: new CPF("122.090.850-98"),
                 roles: [],
-                monthlyFees: [],
+                monthlyFees: new MonthlyFeeList(),
             }),
         );
     });
@@ -44,8 +45,8 @@ describe("Create club use case tests", () => {
         expect(response.isRight()).toBeTruthy();
         expect(clubCreated).toBeInstanceOf(Club);
         expect(clubCreated.id).toBeDefined();
-        expect(clubCreated.persons).toHaveLength(1);
-        expect(clubCreated.persons[0].roles).toContain(RoleEnum.PRESIDENT);
+        expect(clubCreated.persons.getItems()).toHaveLength(1);
+        expect(clubCreated.persons.getItems()[0].roles).toContain(RoleEnum.PRESIDENT);
     });
 
     it("Should not create a club if president does not exist", async () => {

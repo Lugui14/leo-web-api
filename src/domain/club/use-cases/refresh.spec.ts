@@ -6,6 +6,7 @@ import { Email } from "../entities/value-objects/email";
 import { FakeHashGenerator } from "@/../test/cryptography/fake-hash-generator";
 import { CPF } from "../entities/value-objects/cpf";
 import { InvalidTokenError } from "./errors/invalid-token";
+import { MonthlyFeeList } from "../entities/monthly-fee-list";
 
 describe("Refresh use case tests", () => {
     const mockPersonRepository = new InMemoryPersonRepository();
@@ -26,7 +27,7 @@ describe("Refresh use case tests", () => {
                 cpf: new CPF("303.124.220-32"),
                 refreshToken: `{ "sub": "123", "type": "refresh_token" }`,
                 roles: [],
-                monthlyFees: [],
+                monthlyFees: new MonthlyFeeList(),
             },
             "123",
         );

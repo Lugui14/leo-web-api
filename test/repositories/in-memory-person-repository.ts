@@ -21,6 +21,13 @@ export class InMemoryPersonRepository implements PersonRepository {
         });
     }
 
+    findByClubId(clubId: string): Promise<Person[] | null> {
+        return new Promise((resolve) => {
+            const persons = this.persons.filter((person) => person.clubId === clubId);
+            return resolve(persons.length > 0 ? persons : null);
+        });
+    }
+
     findById(id: string): Promise<Person | null> {
         return new Promise((resolve) => {
             const person = this.persons.find((person) => person.id === id);

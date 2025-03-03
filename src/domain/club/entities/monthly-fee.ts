@@ -27,7 +27,7 @@ export class MonthlyFee extends Entity<MonthlyFeeProps> {
         this.props.status = "PAID";
     }
 
-    static create(props: Omit<MonthlyFeeProps, "status">, id?: string): MonthlyFee {
+    static create(props: MonthlyFeeProps, id?: string): MonthlyFee {
         return new MonthlyFee({ ...props, status: "PENDING" }, id);
     }
 }

@@ -7,6 +7,8 @@ import { RoleEnum } from "../entities/enums/role";
 import { Injectable } from "@nestjs/common";
 import { Either, left, right } from "@/core/either";
 import { PersonAlreadyExists } from "./errors/person-already-exists";
+import { MonthlyFeeList } from "../entities/monthly-fee-list";
+import { MonthlyFee } from "../entities/monthly-fee";
 
 interface SignUpUseCaseProps {
     name: string;
@@ -35,6 +37,20 @@ export class SignUpUseCase {
         const personAlreadyExists = await this.personRepository.findByEmail(email);
         if (personAlreadyExists) return left(new PersonAlreadyExists());
 
+        const monthlyFeeList = new MonthlyFeeList();
+
+        const actualDate = new Date();
+
+        for (let i = 1; i <= 12; i++) {
+            monthlyFeeList.add(
+                MonthlyFee.create({
+                    value: 30,
+                    dueDate: new Date(actualDate.getFullYear(), i, 1),
+                    status: "PENDING",
+                }),
+            );
+        }
+
         const person = Person.create({
             name,
             email: new Email(email),
@@ -42,7 +58,7 @@ export class SignUpUseCase {
             birthdate: new Date(birthdate),
             password: hashedPassword,
             roles: [RoleEnum.PRE_LEO],
-            monthlyFees: [],
+            monthlyFees: monthlyFeeList,
         });
 
         await this.personRepository.save(person);

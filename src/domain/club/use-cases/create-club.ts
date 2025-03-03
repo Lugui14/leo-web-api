@@ -6,6 +6,7 @@ import { Club } from "../entities/club";
 import { Either, left, right } from "@/core/either";
 import { PersonNotFoundError } from "./errors/person-not-found";
 import { RoleEnum } from "../entities/enums/role";
+import { ClubPersonList } from "../entities/club-person-list";
 
 interface CreateClubProps {
     name: string;
@@ -25,11 +26,11 @@ export class CreateClubUseCase {
 
         if (!president) return left(new PersonNotFoundError());
 
-        const club = Club.create({ name, cnpj: new CNPJ(cnpj), persons: [] });
+        const club = Club.create({ name, cnpj: new CNPJ(cnpj), persons: new ClubPersonList() });
         club.addPerson(president);
 
         const savedClub = await this.clubRepository.save(club);
-        const savedPresident = savedClub.persons.find((person) => person.id === presidentId);
+        const savedPresident = savedClub.persons.getItems().find((person) => person.id === presidentId);
 
         if (!savedPresident) return left(new PersonNotFoundError());
 

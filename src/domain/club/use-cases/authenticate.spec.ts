@@ -8,6 +8,7 @@ import { Email } from "../entities/value-objects/email";
 import { FakeHashGenerator } from "@/../test/cryptography/fake-hash-generator";
 import { ForbiddenPersonNotFoundError } from "./errors/person-not-found";
 import { InvalidPasswordError } from "./errors/invalid-password";
+import { MonthlyFeeList } from "../entities/monthly-fee-list";
 
 describe("Authentication use case tests", () => {
     const mockPersonRepository = new InMemoryPersonRepository();
@@ -25,7 +26,7 @@ describe("Authentication use case tests", () => {
             birthdate: new Date("1999-01-01"),
             cpf: new CPF("303.124.220-32"),
             roles: [],
-            monthlyFees: [],
+            monthlyFees: new MonthlyFeeList(),
         });
 
         await mockPersonRepository.save(person1);

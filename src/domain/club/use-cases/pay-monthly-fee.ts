@@ -31,6 +31,6 @@ export class PayMonthlyFeeUseCase {
 
         const updatedPerson = await this.personRepository.update(person);
 
-        return right(updatedPerson.monthlyFees);
+        return right(updatedPerson.monthlyFees.getItems());
     }
 }

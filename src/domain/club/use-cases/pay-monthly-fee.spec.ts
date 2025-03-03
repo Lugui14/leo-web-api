@@ -6,6 +6,7 @@ import { PayMonthlyFeeUseCase } from "./pay-monthly-fee";
 import { PersonNotFoundError } from "./errors/person-not-found";
 import { MonthOutOfRangeError } from "./errors/month-out-of-range";
 import { MonthlyFee } from "../entities/monthly-fee";
+import { MonthlyFeeList } from "../entities/monthly-fee-list";
 
 describe("Pay Monthly Fee Use Case Tests", () => {
     const mockPersonRepository = new InMemoryPersonRepository();
@@ -15,13 +16,14 @@ describe("Pay Monthly Fee Use Case Tests", () => {
     let person: Person;
 
     beforeAll(async () => {
-        const monthlyFees: MonthlyFee[] = [];
+        const monthlyFees = new MonthlyFeeList();
 
         for (let i = 1; i <= 12; i++) {
-            monthlyFees.push(
+            monthlyFees.add(
                 MonthlyFee.create({
                     dueDate: new Date(2025, i, 5),
                     value: 30,
+                    status: "PENDING",
                 }),
             );
         }

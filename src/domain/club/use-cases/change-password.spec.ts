@@ -7,6 +7,7 @@ import { Email } from "../entities/value-objects/email";
 import { CPF } from "../entities/value-objects/cpf";
 import { ForbiddenPersonNotFoundError } from "./errors/person-not-found";
 import { InvalidPasswordError } from "./errors/invalid-password";
+import { MonthlyFeeList } from "../entities/monthly-fee-list";
 
 describe("Change password use case tests", () => {
     const mockPersonRepository = new InMemoryPersonRepository();
@@ -25,7 +26,7 @@ describe("Change password use case tests", () => {
             birthdate: new Date("1999-01-01"),
             cpf: new CPF("303.124.220-32"),
             roles: [],
-            monthlyFees: [],
+            monthlyFees: new MonthlyFeeList(),
         });
 
         person = await mockPersonRepository.save(person1);

@@ -2,11 +2,12 @@ import { AggregateRoot } from "@/core/aggregate-root";
 import { Person } from "./person";
 import { PersonAlreadyInClubError } from "./errors/person-already-in-club-error";
 import { CNPJ } from "./value-objects/cnpj";
+import { ClubPersonList } from "./club-person-list";
 
 interface ClubProps {
     name: string;
     cnpj: CNPJ;
-    persons: Person[];
+    persons: ClubPersonList;
 }
 
 export class Club extends AggregateRoot<ClubProps> {
@@ -18,7 +19,7 @@ export class Club extends AggregateRoot<ClubProps> {
         return this.props.name;
     }
 
-    get persons(): Person[] {
+    get persons(): ClubPersonList {
         return this.props.persons;
     }
 
@@ -32,15 +33,15 @@ export class Club extends AggregateRoot<ClubProps> {
         }
 
         person.clubId = this.id;
-        this.props.persons.push(person);
+        this.props.persons.add(person);
     }
 
     removePerson(personId: string): void {
-        this.props.persons = this.props.persons.filter((p) => p.id !== personId);
+        this.props.persons.update(this.persons.getItems().filter((p) => p.id !== personId));
     }
 
     calculateTotalMonthlyRevenue(): number {
-        return this.props.persons.reduce((total, person) => total + person.getTotalFeesPaid(), 0);
+        return this.props.persons.getItems().reduce((total, person) => total + person.getTotalFeesPaid(), 0);
     }
 
     static create(props: ClubProps, id?: string): Club {

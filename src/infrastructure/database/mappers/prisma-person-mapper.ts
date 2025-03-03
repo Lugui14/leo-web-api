@@ -1,4 +1,5 @@
 import { RoleEnum } from "@/domain/club/entities/enums/role";
+import { MonthlyFeeList } from "@/domain/club/entities/monthly-fee-list";
 import { Person } from "@/domain/club/entities/person";
 import { CPF } from "@/domain/club/entities/value-objects/cpf";
 import { Email } from "@/domain/club/entities/value-objects/email";
@@ -21,7 +22,7 @@ export class PrismaPersonMapper {
                 password: person.password,
                 refreshToken: person.refreshToken || undefined,
                 roles: person.roles ? person.roles.map((role) => role.name as RoleEnum) : [],
-                monthlyFees: [],
+                monthlyFees: new MonthlyFeeList(),
                 clubId: person.clubId || undefined,
             },
             person.id,
@@ -41,7 +42,7 @@ export class PrismaPersonMapper {
                 connect: person.roles.map((role) => ({ name: role })),
             },
             monthlyFees: {
-                create: person.monthlyFees.map((fee) => ({
+                create: person.monthlyFees.getItems().map((fee) => ({
                     value: fee.value,
                     dueDate: fee.dueDate,
                     status: fee.status,

@@ -9,6 +9,8 @@ import { CPF } from "../entities/value-objects/cpf";
 import { CNPJ } from "../entities/value-objects/cnpj";
 import { PersonNotFoundError } from "./errors/person-not-found";
 import { ClubNotFoundError } from "./errors/club-not-found";
+import { MonthlyFeeList } from "../entities/monthly-fee-list";
+import { ClubPersonList } from "../entities/club-person-list";
 
 describe("Add person to club use case tests", () => {
     const mockPersonRepository = new InMemoryPersonRepository();
@@ -29,7 +31,7 @@ describe("Add person to club use case tests", () => {
                 birthdate: new Date("1999-01-01"),
                 cpf: new CPF("205.372.220-73"),
                 roles: [],
-                monthlyFees: [],
+                monthlyFees: new MonthlyFeeList(),
             }),
         );
 
@@ -37,7 +39,7 @@ describe("Add person to club use case tests", () => {
             Club.create({
                 name: "ClubTest",
                 cnpj: new CNPJ("86.809.487/0001-73"),
-                persons: [],
+                persons: new ClubPersonList(),
             }),
         );
     });
@@ -53,7 +55,7 @@ describe("Add person to club use case tests", () => {
         expect(response.isRight()).toBeTruthy();
         expect(response.value).toBeInstanceOf(Club);
         expect(savedClub.id).toBe(club.id);
-        expect(savedClub.persons.length).toBe(1);
+        expect(savedClub.persons.getItems().length).toBe(1);
     });
 
     it("Should return left person not found error", async () => {

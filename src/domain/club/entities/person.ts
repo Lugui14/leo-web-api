@@ -1,9 +1,8 @@
 import { Entity } from "@/core/entity";
 import { Email } from "./value-objects/email";
-import { MonthlyFee } from "./monthly-fee";
-import { MonthlyFeeAlreadyExistsError } from "./errors/monthly-fee-already-exists";
 import { CPF } from "./value-objects/cpf";
 import { RoleEnum } from "./enums/role";
+import { MonthlyFeeList } from "./monthly-fee-list";
 
 export type PersonPropsDto = Omit<Person, "password" & "refreshToken">;
 
@@ -15,7 +14,7 @@ interface PersonProps {
     password: string;
     refreshToken?: string;
     roles: RoleEnum[];
-    monthlyFees: MonthlyFee[];
+    monthlyFees: MonthlyFeeList;
     clubId?: string;
 }
 
@@ -64,7 +63,7 @@ export class Person extends Entity<PersonProps> {
         this.props.roles = roles;
     }
 
-    get monthlyFees(): MonthlyFee[] {
+    get monthlyFees(): MonthlyFeeList {
         return this.props.monthlyFees;
     }
 
@@ -76,28 +75,19 @@ export class Person extends Entity<PersonProps> {
         this.props.clubId = clubId;
     }
 
-    addMonthlyFee(monthlyFee: MonthlyFee): void {
-        const existingFee = this.props.monthlyFees.find(
-            (fee) => fee.dueDate.getMonth() === monthlyFee.dueDate.getMonth(),
-        );
-
-        if (existingFee) {
-            throw new MonthlyFeeAlreadyExistsError();
-        }
-
-        this.props.monthlyFees.push(monthlyFee);
-    }
-
     payMonthlyFee(date: Date = new Date()): void {
-        const fee = this.props.monthlyFees.find(
-            (fee) => fee.dueDate.getMonth() === date.getMonth() && fee.dueDate.getFullYear() === date.getFullYear(),
-        );
+        const fee = this.props.monthlyFees
+            .getItems()
+            .find(
+                (fee) => fee.dueDate.getMonth() === date.getMonth() && fee.dueDate.getFullYear() === date.getFullYear(),
+            );
 
         if (fee) fee.markAsPaid();
     }
 
     getTotalFeesPaid(): number {
         return this.props.monthlyFees
+            .getItems()
             .filter((fee) => fee.status === "PAID")
             .reduce((total, fee) => total + fee.value, 0);
     }

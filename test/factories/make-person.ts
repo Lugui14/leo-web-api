@@ -5,6 +5,7 @@ import { PrismaPersonMapper } from "@/infrastructure/database/mappers/prisma-per
 import { PrismaService } from "@/infrastructure/database/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { faker } from "@faker-js/faker";
+import { MonthlyFeeList } from "@/domain/club/entities/monthly-fee-list";
 
 export function makePerson(overrides: Partial<Person> = {}): Person {
     return Person.create({
@@ -14,7 +15,7 @@ export function makePerson(overrides: Partial<Person> = {}): Person {
         birthdate: new Date("1999-01-01"),
         cpf: new CPF("335.038.740-38"),
         roles: [],
-        monthlyFees: [],
+        monthlyFees: new MonthlyFeeList(),
         ...overrides,
     });
 }

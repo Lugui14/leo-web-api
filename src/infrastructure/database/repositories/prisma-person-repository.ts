@@ -25,6 +25,15 @@ export class PrismaPersonRepository implements PersonRepository {
         return prismaPerson ? PrismaPersonMapper.toEntity(prismaPerson) : null;
     }
 
+    async findByClubId(clubId: string): Promise<Person[] | null> {
+        const prismaPersons = await this.prisma.person.findMany({
+            where: { clubId },
+            include: { roles: true },
+        });
+
+        return prismaPersons.map((prismaPerson) => PrismaPersonMapper.toEntity(prismaPerson));
+    }
+
     async findById(id: string): Promise<Person | null> {
         const prismaPerson = await this.prisma.person.findUnique({
             where: { id },
